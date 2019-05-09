@@ -19,7 +19,7 @@ AppAsset::register($this);
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet"><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -85,7 +85,7 @@ AppAsset::register($this);
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-paste"></i>Обратная связь <i class="arrow__right"></i></a>
             <ul class="submenu">
               <li class="submenu__item"><a href="/site/contact" class="submenu__link">Создание письма</a></li>
-              <li class="submenu__item"><a href="" class="submenu__link">Underpoint 2</a></li>
+              <li class="submenu__item"><a href="/site/test" class="submenu__link">test</a></li>
             </ul>
           </li>
           <li class="menu__item"><a href="/site/logout" class="">Выйти из профиля</a></li>
@@ -102,11 +102,6 @@ AppAsset::register($this);
     <?= $content ?>
   </main>
 </div>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js">
-Swal(
-"fdsf"
-);
-</script>
 <script type="text/javascript">
   $(document).ready(function(){
     $('.down').click(function(){

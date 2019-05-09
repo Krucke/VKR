@@ -26,7 +26,7 @@ $this->title = 'Вход в учетную запись';
       <div class="form-group">
         <label for="password" class="color__black">Пароль пользователя</label>
         <input type="password" name="password" class="form-control" id="password" placeholder="Введите пароль" required>
-        <p class="error mt-2 mb-2" style="display:none;font-size:17px;color:red;">Введен неправильный логин или пароль</p>
+        <p class="error mt-3" style="display:none;font-size:17px;color:red;"></p>
       </div>
       <small id="emailHelp" class="form-text text-muted float-left mt-2">При возникновении вопросов обращайтесь в тех. поддержку</small>
       <button type="button" name="signin" class="btn btn-primary float-right button__dark" id="emailHelp" aria-describedby="emailHelp">Войти в систему</button>
@@ -57,10 +57,17 @@ $this->title = 'Вход в учетную запись';
               window.location.replace("/site/suppliers");
             });
           }
+          else if (data == "password") {
+            $('.button__dark').prop('disabled',true);
+            $('.button__dark').css('background','grey');
+            $('.error').css('display','block');
+            $('.error').text("Введен неправильный пароль!");
+          }
           else {
             $('.button__dark').prop('disabled',true);
             $('.button__dark').css('background','grey');
             $('.error').css('display','block');
+            $('.error').text("Пользователь с логином "+login+" в системе не найден!");
           }
         }
       });
@@ -69,7 +76,7 @@ $this->title = 'Вход в учетную запись';
         $('.button__dark').css('background','#363845');
         $('.button__dark').prop('disabled',false);
       });
-      $('#pass').keyup(function(){
+      $('#password').keyup(function(){
         $('.error').css('display','none');
         $('.button__dark').css('background','#363845');
         $('.button__dark').prop('disabled',false);

@@ -92,6 +92,11 @@ class SiteController extends Controller
       return $this->render('login');
     }
 
+    public function actionTest(){
+
+      return $this->render('test');
+    }
+
     public function actionDeleteemp($id){
 
       $model = new Employees;
@@ -191,16 +196,16 @@ class SiteController extends Controller
           $passworduser = $_POST['pass'];
           $user = User::findOne(['login_emp' => $loginuser]);
           if($user!=null){
-            if($passworduser == Yii::$app->getSecurity()->validatePassword($passworduser, $user->pass_emp)){
+            if(Yii::$app->getSecurity()->validatePassword($passworduser, $user->pass_emp)){
               Yii::$app->user->login($user);
-              echo "has";
+              return "has";
             }
             else {
-              echo "bad pas";
+              return "password";
             }
           }
           else {
-            echo "not find";
+            return "login";
           }
       }
       // if(isset($_POST['signin'])){
