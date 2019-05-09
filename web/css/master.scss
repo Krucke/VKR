@@ -1,0 +1,232 @@
+$control_panel_top_bg: #f3f3f3;
+$control_panel_bottom_bg: #363845;
+$control_panel_grey: #cac8c8;
+$control_panel_hover_li: #282a36;
+body{
+  margin: 0;
+  padding: 0;
+  font-size: 1.3em;
+  font-family: 'Merriweather', serif;
+  -webkit-animation: bugfix infinite 1s;
+}
+p,h1,h2,h3,h4,h5,h6,ul,li,a{
+  margin: 0;
+  padding: 0;
+}
+a{
+  color: white;
+  text-decoration: none;
+}
+a:hover{
+  text-decoration: none;
+  color: red;
+}
+.submenu{
+  display: none;
+  &__item{
+    font-size: 18px;
+    padding: 15px 0 5px 40px;
+    .submenu__link{
+
+    }
+  }
+  &__item:hover a{
+    transition: 0.6s;
+    color: red;
+    padding-left: +10px;
+  }
+}
+.active_li{
+  background: $control_panel_hover_li;
+}
+ul{
+  list-style: none;
+}
+.wrap{
+  margin: 0;
+  padding: 0;
+}
+.control_panel::-webkit-scrollbar{
+  width: 10px;
+  background: white;
+}
+.control_panel::-webkit-scrollbar-thumb {
+  width: 10px;
+  background: $control_panel_hover_li;
+}
+.control_panel{
+  width: 350px;
+  position: fixed;
+  left: -320px;
+  top: 0;
+  height: 100%;
+  overflow: auto;
+  transition: left 0.3s;
+  z-index: 1000;
+  scroll-behavior: smooth;
+  &__top{
+    background: $control_panel_top_bg;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    .logo{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      &__img{
+        width: 50px;
+        height: 50px;
+        width: 15%;
+      }
+      &__brand{
+        width: 55%;
+        text-align: center;
+        h2{
+          font-size: 35px;
+          font-weight: 700;
+        }
+      }
+    }
+  }
+  &__bottom{
+    background: $control_panel_bottom_bg;
+    height: 100vh;
+    .profile_user{
+      display: flex;
+      padding-top: 15px;
+      justify-content: space-around;
+      align-items: center;
+      &__img{
+        width: 80px;
+        height: 80px;
+        border-radius: 100px;
+      }
+      &__info{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 75%;
+        text-align: center;
+        h4{
+          font-size: 24px;
+          color: white;
+        }
+        h5{
+          font-size: 20px;
+          color: $control_panel_grey;
+        }
+      }
+    }
+    .navigation{
+      padding-top: 15px;
+      &__menu{
+        .menu{
+          &__item{
+            padding: 15px 0 15px 15px;
+            font-size: 21px;
+            .menu__link{
+              color: $control_panel_grey;
+              pointer-events: none;
+              .fas{
+                padding-right: 10px;
+              }
+              .arrow__right{
+                border: 0 solid $control_panel_grey;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 5px;
+                transform: rotate(-45deg);
+              }
+              .arrow__right.active{
+                margin-left: 7px;
+                margin-bottom: 4px;
+                transform: rotate(45deg);
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 5px;
+              }
+            }
+          }
+          &__item:hover{
+            transition: 0.3s;
+            background: $control_panel_hover_li;
+          }
+          &__item:hover .menu__link{
+            transition: 0.3s;
+            color: white;
+          }
+          &__item:hover .arrow__right{
+            transition: 0.3s;
+            border: solid white;
+            border-width: 0 3px 3px 0;
+            display: inline-block;
+            padding: 5px;
+            transform: rotate(-45deg);
+          }
+        }
+      }
+    }
+  }
+}
+.nav-toggle {
+    position: absolute;
+    left: 315px;
+    top: 0;
+    padding: 0.1em;
+    color: black;
+    cursor: pointer;
+    font-size: 1.2em;
+    line-height: 1;
+    font-weight: bold;
+    z-index: 1001;
+}
+.nav-toggle:after {
+    content: "\2630";
+    text-decoration: none;
+}
+[id='nav-toggle'] {
+    position: absolute;
+    display: none;
+}
+
+[id='nav-toggle']:checked ~ .control_panel {
+    left: 0;
+    box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+    -moz-box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+    -webkit-box-shadow:4px 0px 20px 0px rgba(0,0,0, 0.5);
+}
+[id='nav-toggle']:checked ~ .control_panel > .nav-toggle:after {
+  content: '\2715';
+ }
+ [id='nav-toggle']:checked ~ .container {
+   transition: 0.4s;
+     -webkit-transform: translateX(50px);
+     -moz-transform: translateX(50px);
+     transform: translateX(50px);
+ }
+
+.container{
+  font-size: 20px;
+}
+/*стили кнопок и тд*/
+.button{
+  &__dark{
+    background: $control_panel_bottom_bg;
+    border: 0;
+    padding: 10px;
+    color: white;
+  }
+  &__dark:hover{
+    background: lighten($control_panel_bottom_bg, 10);
+  }
+}
+.color{
+  &__black{
+    color: black;
+  }
+}
+/*разработка дизайна для
+разрешения экрана ноутбуков
+т.н*/
