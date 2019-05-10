@@ -105,6 +105,12 @@ class SiteController extends Controller
       return $this->redirect(['/site/employees']);
     }
 
+    public function actionCheckcells(){
+
+        $cell = Cells::findOne(['number_cell' => $_POST['incell']]);
+        return $cell->freely;
+    }
+
     public function actionProducts(){
 
       $model = new Product;
@@ -127,10 +133,21 @@ class SiteController extends Controller
     }
 
     public function actionMovement(){
-      if(isset($_POST['name']) and isset($_POST['cell']) isset($_POST['qty']) isset($_POST['incell'])){
+      if(isset($_POST['name']) and isset($_POST['cell']) and isset($_POST['qty']) and isset($_POST['incell'])){
 
-        $modelprod = new Product();
-        $modelcells = new Cells();
+        $fromcell = Cells::findOne(['number_cell' => $_POST['cell']]);
+        $incell = Cells::findOne(['number_cell' => $_POST['incell']]);
+        if($incell->freely >= $_POST['qty']){
+          $prod = Product::findOne(['name_prod' => $_POST['name']]);
+          $prod->cell_id = $incell->id_cell;
+          $prod->save();
+          $incell->freely = $incell->freely - $_POST['qty'];
+          $incell->save();
+          $fromcell->freely = $fromcell->freely + $_POST['qty'];
+          $fromcell->save();
+          return "ok";
+        }
+        return "cells";
       }
     }
 
