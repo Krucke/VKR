@@ -22,6 +22,7 @@ AppAsset::register($this);
     <link href="https://fonts.googleapis.com/css?family=Merriweather:400,700" rel="stylesheet"><script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <?php $this->registerLinkTag(['rel' => 'icon', 'type' => 'image/png', 'href' => '/logo/logo.png']) ?>
     <?php $this->registerCsrfMetaTags() ?>
@@ -72,8 +73,9 @@ AppAsset::register($this);
           </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-people-carry"></i>Хранение товара <i class="arrow__right"></i></a>
             <ul class="submenu">
-              <li class="submenu__item"><a href="" class="submenu__link">Underpoint 1</a></li>
-              <li class="submenu__item"><a href="" class="submenu__link">Underpoint 2</a></li>
+              <li class="submenu__item"><a href="/site/infoproducts" class="submenu__link">Информация о размещении товара</a></li>
+              <li class="submenu__item"><a href="" class="submenu__link">Перемещение товара</a></li>
+              <li class="submenu__item"><a href="/site/inventory" class="submenu__link">Инвентаризация</a></li>
             </ul>
           </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-users"></i>Сотрудники <i class="arrow__right"></i></a>

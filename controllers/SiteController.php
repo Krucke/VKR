@@ -15,6 +15,7 @@ use app\models\Employees;
 use app\models\StatusOrder;
 use app\models\Post;
 use app\models\Product;
+use app\models\Cells;
 
 class SiteController extends Controller
 {
@@ -26,11 +27,11 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact'],
+                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['logout','suppliers','','site','/'],
+                        'actions' => ['logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts'],
                         'roles' => ['@'],
                     ],
                     [
@@ -109,6 +110,28 @@ class SiteController extends Controller
       $model = new Product;
       $products = $model->all();
       return $this->render('products',['products' => $products]);
+    }
+
+    public function actionInventory(){
+
+      return $this->render('inventory');
+    }
+
+    public function actionInfoproducts(){
+
+      $modelprod = new Product();
+      $products = $modelprod->all();
+      $modelcells = new Cells();
+      $cells = $modelcells->AllCells();
+      return $this->render('infoprod',['products' => $products,'cells' => $cells]);
+    }
+
+    public function actionMovement(){
+      if(isset($_POST['name']) and isset($_POST['cell']) isset($_POST['qty']) isset($_POST['incell'])){
+
+        $modelprod = new Product();
+        $modelcells = new Cells();
+      }
     }
 
     public function actionAddemp(){
@@ -208,24 +231,6 @@ class SiteController extends Controller
             return "login";
           }
       }
-      // if(isset($_POST['signin'])){
-      //
-      //   $loginuser = $_POST['login'];
-      //   $passworduser = $_POST['password'];
-      //   $user = User::findOne(['login_emp' => $loginuser]);
-      //   if($user!=null){
-      //     if($user->pass_emp == $passworduser){
-      //       Yii::$app->user->login($user);
-      //       return $this->redirect(['/site/index']);
-      //     }
-      //     else {
-      //       echo "bad pas";
-      //     }
-      //   }
-      //   else {
-      //     echo "not find";
-      //   }
-      // }
     }
 
     /**

@@ -16,6 +16,7 @@ class m190425_171259_create_cell_table extends Migration
             'id_cell' => $this->primaryKey(),
             'number_cell' => $this->string(3)->notNull(),
             'max_qty' => $this->integer(3)->defaultValue(100)->notNull(),
+            'freely' => $this->integer()->notNull(),
         ]);
 
     }
