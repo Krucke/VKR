@@ -16,6 +16,7 @@ use app\models\StatusOrder;
 use app\models\Post;
 use app\models\Product;
 use app\models\Cells;
+use app\models\Customer;
 
 class SiteController extends Controller
 {
@@ -27,7 +28,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts'],
+                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','customerlogin'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -36,7 +37,7 @@ class SiteController extends Controller
                     ],
                     [
                       'allow' => true,
-                      'actions' => ['login'],
+                      'actions' => ['login','customerlogin'],
                       'roles' => ['?'],
                     ],
                 ],
@@ -199,6 +200,38 @@ class SiteController extends Controller
       $model2 = new Post;
       $posts = $model2->getPost();
       return $this->render('editemp',['emp' => $emp,'posts' => $posts]);
+    }
+
+    public function actionCustomerlogin(){
+
+      if(isset($_POST['signin'])){
+        $INN = $_POST['INN'];
+        $ORGN = $_POST['ORGN'];
+        $cust = Customer::findOne(['INN' => $INN]);
+        if($cust!=null){
+          $custses = Yii::$app->session;
+          $custses['INN'] = $INN;
+          return $this->render('customerview');
+        }
+        else {
+          echo "<script>
+            alert('wrong INN');
+          </script>";
+        }
+      }
+      return $this->render('customerlogin');
+    }
+
+    public function actionCustomerview(){
+
+      $products = Product::find()->all();
+      return $this->render('customerview',['products' => $products]);
+    }
+
+    public function actionCreatindorder(){
+
+      $cart = Yii::$app->session;
+      $arr = [];
     }
 
     public function actionContact(){

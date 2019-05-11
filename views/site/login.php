@@ -32,6 +32,7 @@ $this->title = 'Вход в учетную запись';
       <button type="button" name="signin" class="btn btn-primary float-right button__dark" id="emailHelp" aria-describedby="emailHelp">Войти в систему</button>
       <div class="clearfix"></div>
     </form>
+    <a class="cutsomerloginlink" href="/site/customerlogin">Являетесь заказчиком? Перейдите по этой ссылке.</a>
   </div>
 </div>
 <script type="text/javascript">

@@ -80,6 +80,12 @@ AppAsset::register($this);
               <li class="submenu__item"><a href="/site/inventory" class="submenu__link">Инвентаризация</a></li>
             </ul>
           </li>
+          <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-sticky-note"></i>Заказы <i class="arrow__right"></i></a>
+            <ul class="submenu">
+              <li class="submenu__item"><a href="/site/orders" class="submenu__link">Все заказы</a></li>
+              <li class="submenu__item"><a href="/site/neworders" class="submenu__link">Новые заказы</a></li>
+            </ul>
+          </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-users"></i>Сотрудники <i class="arrow__right"></i></a>
             <ul class="submenu">
               <li class="submenu__item"><a href="/site/employees" class="submenu__link">Таблица сотрудников</a></li>
