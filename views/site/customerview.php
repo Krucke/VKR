@@ -4,7 +4,7 @@
   $this->title = "Добавление товаров для заказа";
 ?>
 <h2 class="text-center mt-4 mb-4">Товары</h2>
-<form action="" class="col-12" id="form">
+<form action="/site/customerview" class="col-12" id="form" method="post">
   <input type="text" name="referal" value="" class="form-control col-md-12 who mb-3 mt-3" id="textsearch" autocomplete="off" placeholder="Поиск по данным о книге...">
 </form>
 <table class="table table-hover text-center table-bordered" style="font-size:16px;">
@@ -59,9 +59,56 @@
     </div>
   </div>
 </div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Подтверждение заказа
+</button>
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Подтверждение заказа</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover text-center table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Номер</th>
+              <th scope="col">Название товара</th>
+              <th scope="col">Количество</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+              $session = Yii::$app->session;
+              if(isset($session['order'])){
+                foreach($session['order'] as $order => $val):
+            ?>
+            <tr>
+              <td><?=$order+1?></td>
+              <td><?=$val['name_prod']?></td>
+              <td><?=$val['qty_prod']?></td>
+            </tr>
+          <?php endforeach;} ?>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <button type="button" class="btn btn-primary" id="saveorder">Подтвердить</button>
+      </div>
+    </div>
+  </div>
+</div>
 <script>
   $(document).ready(function(){
-    var name_prod, qty, qtyall;
+    var name_prod, qty_need, qtyall;
     $(".who").keyup(function(){
       _this = this;
 
@@ -76,18 +123,80 @@
     });
     $('table tbody tr').click(function(){
       name_prod = $(this).find('#name_prod').text().trim();
-      qtyall = $(this).find('#qty').text().trim();
-      $('#modal').modal('show');
+      qtyall = parseInt($(this).find('#qty').text().trim());
+      $('#modal').modal('toggle');
       $('#addtoorder').click(function(){
-        qty = $('#qty_prod').val().trim();
-        if(qty < qtyall){
+        qty_need = parseInt($('#qty_prod').val());
+        if(qty_need <= qtyall){
+          $.ajax({
+            url: "/site/creatingorder",
+            type: "POST",
+            dataType: "html",
+            data: ({name_prod:name_prod,qty_need:qty_need}),
+            success: function(data){
+              if(data == "ok"){
 
-          console.log("Чотко");
+                $('#qty_prod').val("");
+                swal({
+                  title: "Добавление товара",
+                  text: "Товар "+name_prod+" в количестве "+qty_need+" шт. добавлен к вашему заказу!",
+                  icon: "success",
+                  button: "Продолжить оформление заказа",
+                })
+                .then(function(){
+                  $('#modal').modal('toggle');
+                  window.location.replace("/site/customerview");
+                });
+              }
+            }
+          });
         }
         else {
-          console.log("Нет необходимого количества товара на складе, введите меньше");
+          swal({
+            title: "Ошибка",
+            text: "Нет необходимо количества товара на складе!",
+            icon: "error",
+            button: "Ок",
+          });
         }
       });
     });
   })
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#save').on('click',function(){
+      swal({
+        title: "Подтверждение заказа",
+        text:"Вы уверены, что выбрали нужные товары и хотите подтвердить заказ?",
+        icon: "information",
+        button: "Подтверждаю",
+      })
+      .then(function(){
+        $.ajax({
+          url: '/site/AddOrrderToDb',
+          type: "POST",
+          dataType: "html",
+          success: function(data){
+            if(data == "OK"){
+              swal({
+                title: "Подтверждение заказа",
+                text:"Ваш заказ успешно сформирован",
+                icon: "success",
+                button: "OK",
+              });
+            }
+          },
+          error: function(){
+            swal({
+              title: "Ошибка",
+              text:"Произошла ошибка при формировании заказа",
+              icon: "error",
+              button: "OK",
+            });
+          }
+        });
+      });
+    });
+  });
 </script>

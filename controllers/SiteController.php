@@ -17,6 +17,7 @@ use app\models\Post;
 use app\models\Product;
 use app\models\Cells;
 use app\models\Customer;
+use app\models\Trans;
 
 class SiteController extends Controller
 {
@@ -28,7 +29,7 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','customerlogin'],
+                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','customerlogin','customerview'],
                 'rules' => [
                     [
                         'allow' => true,
@@ -37,7 +38,7 @@ class SiteController extends Controller
                     ],
                     [
                       'allow' => true,
-                      'actions' => ['login','customerlogin'],
+                      'actions' => ['login','customerlogin','customerview'],
                       'roles' => ['?'],
                     ],
                 ],
@@ -88,8 +89,7 @@ class SiteController extends Controller
      *
      * @return Response|string
      */
-    public function actionLogin()
-    {
+    public function actionLogin(){
 
       return $this->render('login');
     }
@@ -228,10 +228,28 @@ class SiteController extends Controller
       return $this->render('customerview',['products' => $products]);
     }
 
-    public function actionCreatindorder(){
+    public function actionCreatingorder(){
+      $session = Yii::$app->session;
+      $session['order'];
 
-      $cart = Yii::$app->session;
-      $arr = [];
+      if(isset($_POST['name_prod']) and isset($_POST['qty_need'])){
+
+        $products = Product::findOne(['name_prod' => $_POST['name_prod']]);
+        $products->qty_prod -= $_POST['qty_need'];
+        $products->save();
+        $newprod = array('name_prod' => $_POST['name_prod'],'qty_prod' => $_POST['qty_need']);
+        $RewriteSes = $session['order'];
+        $RewriteSes[] = $newprod;
+        $session['order'] = $RewriteSes;
+        return "ok";
+      }
+    }
+
+    public function actionAddOrrderToDb(){
+
+      $custses = Yii::$app->session;
+      $customer = Customer::findOne(['INN' => $custses['INN']])
+      $trans = new Trans();
     }
 
     public function actionContact(){
@@ -288,8 +306,7 @@ class SiteController extends Controller
      *
      * @return Response
      */
-    public function actionLogout()
-    {
+    public function actionLogout(){
         Yii::$app->user->logout();
 
         return $this->goHome();
