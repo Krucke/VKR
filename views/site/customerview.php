@@ -1,10 +1,12 @@
 <?php
 
   use app\models\Product;
+  use app\models\Order;
   $this->title = "Добавление товаров для заказа";
 ?>
+
 <h2 class="text-center mt-4 mb-4">Товары</h2>
-<form action="/site/customerview" class="col-12" id="form" method="post">
+<form action="" class="col-12" id="form" method="post">
   <input type="text" name="referal" value="" class="form-control col-md-12 who mb-3 mt-3" id="textsearch" autocomplete="off" placeholder="Поиск по данным о книге...">
 </form>
 <table class="table table-hover text-center table-bordered" style="font-size:16px;">
@@ -76,6 +78,14 @@
         </button>
       </div>
       <div class="modal-body">
+        <?php
+        $session = Yii::$app->session;
+          if($session['order'] == NULL){
+            echo "<p id='text_order'>Вы еще ничего не добавили к Вашему заказу. <i class='fas fa-frown'></i></p>";
+          }
+          else {
+
+        ?>
         <table class="table table-hover text-center table-bordered">
           <thead>
             <tr>
@@ -98,6 +108,7 @@
           <?php endforeach;} ?>
           </tbody>
         </table>
+        <?php } ?>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
@@ -106,6 +117,15 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+  var text = $('#text_order').text();
+  if(text!=""){
+    $('#saveorder').prop('disabled',true);
+  }
+  else {
+    $('#saveorder').prop('disabled',false);
+  }
+</script>
 <script>
   $(document).ready(function(){
     var name_prod, qty_need, qtyall;
@@ -148,6 +168,17 @@
                   window.location.replace("/site/customerview");
                 });
               }
+            },
+            error: function(){
+              swal({
+                title: "Ошибка",
+                text:"Произошла ошибка при формировании заказа",
+                icon: "error",
+                button: "OK",
+              })
+              .then(function(){
+                window.location.replace('/site/customerview');
+              });
             }
           });
         }
@@ -165,26 +196,33 @@
 </script>
 <script type="text/javascript">
   $(document).ready(function(){
-    $('#save').on('click',function(){
+    $('#saveorder').on('click',function(){
       swal({
         title: "Подтверждение заказа",
         text:"Вы уверены, что выбрали нужные товары и хотите подтвердить заказ?",
-        icon: "information",
+        icon: "info",
         button: "Подтверждаю",
       })
       .then(function(){
         $.ajax({
-          url: '/site/AddOrrderToDb',
+          url: '/site/addordertodb',
           type: "POST",
+          data: ({lol:"0"}),
           dataType: "html",
           success: function(data){
-            if(data == "OK"){
+            if(data == "ok"){
               swal({
                 title: "Подтверждение заказа",
                 text:"Ваш заказ успешно сформирован",
                 icon: "success",
                 button: "OK",
+              })
+              .then(function(){
+                window.location.replace('/site/customerview');
               });
+            }
+            else {
+              alert('no');
             }
           },
           error: function(){

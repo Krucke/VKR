@@ -71,4 +71,9 @@ class Trans extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Product::className(), ['id_product' => 'prod_id']);
     }
+
+    public function AllTrans(){
+
+      return static::find()->all();
+    }
 }

@@ -18,6 +18,7 @@ use app\models\Product;
 use app\models\Cells;
 use app\models\Customer;
 use app\models\Trans;
+use app\models\Order;
 
 class SiteController extends Controller
 {
@@ -29,16 +30,16 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','customerlogin','customerview'],
+                'only' => ['login','logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','customerlogin','customerview','addordertodb','neworders','orders'],
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts'],
+                        'actions' => ['logout','suppliers','','site','/','/site','addemp','editemp','products','employees','contact','infoproducts','orders','neworders'],
                         'roles' => ['@'],
                     ],
                     [
                       'allow' => true,
-                      'actions' => ['login','customerlogin','customerview'],
+                      'actions' => ['login','customerlogin','customerview','addordertodb'],
                       'roles' => ['?'],
                     ],
                 ],
@@ -245,11 +246,44 @@ class SiteController extends Controller
       }
     }
 
-    public function actionAddOrrderToDb(){
+    public function actionAddordertodb(){
+      if(isset($_POST['lol'])){
 
-      $custses = Yii::$app->session;
-      $customer = Customer::findOne(['INN' => $custses['INN']])
-      $trans = new Trans();
+        $custses = Yii::$app->session;
+        $session = Yii::$app->session;
+        $customer = Customer::findOne(['INN' => $custses['INN']]);
+        $num = Order::NumOrder();
+        $id_order = Order::LastId();
+        $order = new Order();
+        $transaction = Yii::$app->db->beginTransaction();
+        try {
+          $order->number_order = $num+1;
+          $order->date_created = date('Y-m-d');
+          $order->customer_id = $customer->id_customer;
+          $order->emp_id = "";
+          $order->status_id = 1;
+          $order->save();
+          foreach ($session['order'] as $key => $value) {
+
+            $prod = Product::findOne(['name_prod' => $value['name_prod']]);
+            $trans = new Trans();
+            $trans->date_trans = date('Y-m-d');
+            $trans->time_trans = date('G:i:s');
+            $trans->order_id = $id_order+1;
+            $trans->prod_id = $prod['id_product'];
+            $trans->qty_prod = $value['qty_prod'];
+            $trans->save();
+          }
+
+          $transaction->commit();
+          unset($session['order']);
+          return "ok";
+        }
+        catch (\Exception $e) {
+          $transaction->rollBack();
+        }
+      }
+
     }
 
     public function actionContact(){
@@ -301,6 +335,34 @@ class SiteController extends Controller
       }
     }
 
+
+    public function actionOrders(){
+
+      $model = new Order();
+      $model1 = new Trans();
+      $orders = $model->AllOrders();
+      $trans = $model1->AllTrans();
+      return $this->render('order',['orders' => $orders,'trans' => $trans]);
+    }
+
+    public function actionNeworders(){
+
+      $model = new Order;
+      $orders = $model->NewOrders();
+      return $this->render('neworders',['orders' => $orders]);
+    }
+
+    public function actionTakeorder(){
+
+      if(isset($_POST['id'])){
+        $id = $_POST['id'];
+        $order = Order::findOne(['id_order' => $id]);
+        $order->status_id = 2;
+        $order->emp_id = Yii::$app->user->identity->id_emp;
+        $order->save();
+        return "ok";
+      }
+    }
     /**
      * Logout action.
      *

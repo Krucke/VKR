@@ -9,6 +9,7 @@ use app\assets\AppAsset;
 use app\models\User;
 use app\models\Employees;
 use app\models\Post;
+use app\models\Order;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -83,7 +84,7 @@ AppAsset::register($this);
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-sticky-note"></i>Заказы <i class="arrow__right"></i></a>
             <ul class="submenu">
               <li class="submenu__item"><a href="/site/orders" class="submenu__link">Все заказы</a></li>
-              <li class="submenu__item"><a href="/site/neworders" class="submenu__link">Новые заказы</a></li>
+              <li class="submenu__item"><a href="/site/neworders" class="submenu__link">Новые заказы <span class="badge badge-light"><?=Order::NewOrdersCount();?></span></a></li>
             </ul>
           </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-users"></i>Сотрудники <i class="arrow__right"></i></a>
