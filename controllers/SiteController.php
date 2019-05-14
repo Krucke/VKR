@@ -356,7 +356,8 @@ class SiteController extends Controller
 
         $sectionStyle = [
           'marginTop' => 500,
-          'marginLeft' => 1500,
+          'marginLeft' => 1000,
+          'marginRight' => 2500,
           'orientation' => 'landscape',
         ];
         $section = $worddoc->addSection($sectionStyle);
@@ -383,11 +384,11 @@ class SiteController extends Controller
         $section->addText("Грузополучатель: {$gryz->customer->name_customer}.");
         $table = $section->addTable($tableStyle);
         $table->addRow();
-        $cellId = $table->addCell(100);
+        $cellId = $table->addCell();
         $cellId->addText('Номер по порядку');
         $cellName = $table->addCell(1000);
         $cellName->addText('Название товара');
-        $cellDesc = $table->addCell();
+        $cellDesc = $table->addCell(300);
         $cellDesc->addText('Код ISBN');
         $cellDesc = $table->addCell();
         $cellDesc->addText('Количество');
@@ -395,6 +396,8 @@ class SiteController extends Controller
         $cellDesc->addText('Цена');
 
         $sum = 0;
+
+        $trans = Trans::find()->where(['order_id' => $id])->all();
         for ($j=0; $j < count($trans); $j++) {
           $prod = Product::findOne($trans[$j]['prod_id']);
           $table->addRow();
@@ -402,11 +405,11 @@ class SiteController extends Controller
           $table->addCell()->addText($prod->name_prod);
           $table->addCell()->addText($prod->kod_ISBN);
           $table->addCell()->addText($trans[$j]['qty_prod']." шт");
-          $table->addCell()->addText($prod->price_prod);
+          $table->addCell()->addText($prod->price_prod." руб.");
           $sum += $prod->price_prod;
         }
         $section->addText('Итого: '.$sum." руб.",[],['align' => 'right']);
-        $section->addText('Дата составления '.date('Y-m-d'));
+        $section->addText('Дата составления '.date('Y-m-d'),[],['align' => 'right']);
 
         $filename = "ТТН от ".date('Y-m-d').".docx";
         header("Content-Description: File Transfer");
