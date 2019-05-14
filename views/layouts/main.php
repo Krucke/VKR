@@ -77,14 +77,15 @@ AppAsset::register($this);
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-people-carry"></i>Хранение товара <i class="arrow__right"></i></a>
             <ul class="submenu">
               <li class="submenu__item"><a href="/site/infoproducts" class="submenu__link">Информация о размещении товара</a></li>
-              <li class="submenu__item"><a href="" class="submenu__link">Перемещение товара</a></li>
-              <li class="submenu__item"><a href="/site/inventory" class="submenu__link">Инвентаризация</a></li>
+              <li class="submenu__item"><a href="/site/inv" class="submenu__link">Создание акта о проведении инвентаризации</a></li>
+              <li class="submenu__item"><a href="/site/ostatki" class="submenu__link">Формирование остатков товаров</a></li>
             </ul>
           </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-sticky-note"></i>Заказы <i class="arrow__right"></i></a>
             <ul class="submenu">
               <li class="submenu__item"><a href="/site/orders" class="submenu__link">Все заказы</a></li>
               <li class="submenu__item"><a href="/site/neworders" class="submenu__link">Новые заказы <span class="badge badge-light"><?=Order::NewOrdersCount();?></span></a></li>
+              <li class="submenu__item"><a href="/site/complite" class="submenu__link">Заказы для комплектовки</a></li>
             </ul>
           </li>
           <li class="menu__item down"><a href="" class="menu__link"><i class="fas fa-users"></i>Сотрудники <i class="arrow__right"></i></a>

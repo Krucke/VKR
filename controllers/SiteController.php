@@ -335,6 +335,181 @@ class SiteController extends Controller
       }
     }
 
+    public function actionCompliteorder($id){
+
+        \PhpOffice\PhpWord \ Settings :: setCompatibility (false);
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+        \PhpOffice\PhpWord\Settings :: setZipClass (\PhpOffice\PhpWord\Settings :: PCLZIP);
+        $worddoc = new \PhpOffice\PhpWord\PhpWord();
+        $worddoc->setDefaultFontName('Times New Roman');
+        $worddoc->setDefaultFontSize(14);
+        $properties = $worddoc->getDocInfo();
+        $properties->setCreator('da');
+        $properties->setCompany('ООО');
+        $properties->setTitle('Заголовок');
+        $properties->setDescription('My description');
+        $properties->setCategory('My category');
+        $properties->setLastModifiedBy('das');
+        $properties->setSubject('My subject');
+        $properties->setKeywords('my, key, word');
+
+
+        $sectionStyle = [
+          'marginTop' => 500,
+          'marginLeft' => 1500,
+          'orientation' => 'landscape',
+        ];
+        $section = $worddoc->addSection($sectionStyle);
+
+        $onlybold = [
+          'bold' => true,
+          'size' => 20,
+        ];
+        $onlycenter = [
+          'align' => 'center',
+        ];
+        $pos = [
+          'position' => 'lowered',
+        ];
+
+        $tableStyle = [
+          "borderColor" => '000000',
+          "borderSize" => 3,
+        ];
+
+        $section->addText("Товарно-транспортная накладная",$onlybold,['alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER]);
+        $section->addText("Грузоотправитель: ООО Издательство Эксмо.");
+        $gryz = Order::findOne($id);
+        $section->addText("Грузополучатель: {$gryz->customer->name_customer}.");
+        $table = $section->addTable($tableStyle);
+        $table->addRow();
+        $cellId = $table->addCell(100);
+        $cellId->addText('Номер по порядку');
+        $cellName = $table->addCell(1000);
+        $cellName->addText('Название товара');
+        $cellDesc = $table->addCell();
+        $cellDesc->addText('Код ISBN');
+        $cellDesc = $table->addCell();
+        $cellDesc->addText('Количество');
+        $cellDesc = $table->addCell();
+        $cellDesc->addText('Цена');
+
+        $sum = 0;
+        for ($j=0; $j < count($trans); $j++) {
+          $prod = Product::findOne($trans[$j]['prod_id']);
+          $table->addRow();
+          $table->addCell()->addText($j+1);
+          $table->addCell()->addText($prod->name_prod);
+          $table->addCell()->addText($prod->kod_ISBN);
+          $table->addCell()->addText($trans[$j]['qty_prod']." шт");
+          $table->addCell()->addText($prod->price_prod);
+          $sum += $prod->price_prod;
+        }
+        $section->addText('Итого: '.$sum." руб.",[],['align' => 'right']);
+        $section->addText('Дата составления '.date('Y-m-d'));
+
+        $filename = "ТТН от ".date('Y-m-d').".docx";
+        header("Content-Description: File Transfer");
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        \PhpOffice\PhpWord\Settings::setCompatibility(false);
+        $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($worddoc, 'Word2007');
+        ob_clean();
+        $xmlWriter->save("php://output");
+        exit;
+        // $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($worddoc, 'Word2007');
+        // $objWriter->save('doc'.date('Y-m-d').'.docx');
+    }
+
+    public function actionComplite(){
+
+      $model = new Order;
+      $orders = $model->CompliteOrders();
+      return $this->render('compliteorder',['orders' => $orders]);
+    }
+
+    public function actionInv(){
+
+      $model = new Employees;
+      $employees = $model->getEmp();
+      if(isset($_POST['save'])){
+
+        \PhpOffice\PhpWord \ Settings :: setCompatibility (false);
+        \PhpOffice\PhpWord\Settings::setOutputEscapingEnabled(true);
+        \PhpOffice\PhpWord\Settings :: setZipClass (\PhpOffice\PhpWord\Settings :: PCLZIP);
+        $worddoc = new \PhpOffice\PhpWord\PhpWord();
+        $worddoc->setDefaultFontName('Times New Roman');
+        $worddoc->setDefaultFontSize(14);
+        $properties = $worddoc->getDocInfo();
+        $properties->setCreator('da');
+        $properties->setCompany('ООО');
+        $properties->setTitle('Заголовок');
+        $properties->setDescription('My description');
+        $properties->setCategory('My category');
+        $properties->setLastModifiedBy('das');
+        $properties->setSubject('My subject');
+        $properties->setKeywords('my, key, word');
+
+
+        $sectionStyle = [
+          'marginTop' => 500,
+          'marginLeft' => 1500,
+          'orientation' => 'landscape',
+        ];
+        $section = $worddoc->addSection($sectionStyle);
+
+        $te = $_POST['base'];
+        $bases = "Основания для проведения: ";
+        $inv_text = "Инвентаризационная опись товаров";
+        $organisation1 = "ООО Издательство Эксмо";
+        $organisation2 = "123308, г. Москва, ул. Зорге, д.1";
+        $organisation3 = "Тел: (495) 411-68-86";
+        $raspis = "           К началу проведения инвентаризации все расходные и приходные документы на основные средства сданы в бухгалтерию и все основные средств, поступившие на нашу ответственность, оприходованы, а выбывшие списаны в расход.";
+        $face = "           Лицо(а), ответственное(ые) за сохранность основных средств: ";
+        $onlybold = [
+          'bold' => true,
+        ];
+        $onlycenter = [
+          'align' => 'left',
+        ];
+        $pos = [
+          'position' => 'lowered',
+        ];
+        $section->addText($organisation1,$onlybold,$onlycenter);
+        $section->addText($organisation2,array(),$onlycenter);
+        $section->addText($organisation3,array(),$onlycenter);
+        $section->addText(htmlspecialchars($inv_text),array('bold' => true,'size' => 20),array('align' => 'center'));
+        $section->addText(htmlspecialchars($bases.$te));
+        $section->addText("Расписка",array('bold' => true,'size' => 20),array('align' => 'center'));
+        $section->addText($raspis);
+        $section->addText($face);
+        $user = Employees::findOne($_POST['face']);
+        $section->addText("Должность: ".$user->post->name_post,array(),array('align' => 'right'));
+        $section->addText($user->lastname_emp." ".$user->firstname_emp." ".$user->otch_emp,array(),array('align' => 'right'));
+        $section->addText(" Подпись: __________________",array(),array('align' => 'right'));
+        $section->addText("Дата начала инвентаризации ".$_POST['date'],array(),array('align' => 'right'));
+
+
+        $filename = "Акт о проведении инвентаризации на ".$_POST['date'].".docx";
+        header("Content-Description: File Transfer");
+        header('Content-Disposition: attachment; filename="'.$filename.'"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        \PhpOffice\PhpWord\Settings::setCompatibility(false);
+        $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($worddoc, 'Word2007');
+        ob_clean();
+        $xmlWriter->save("php://output");
+        exit;
+        // $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($worddoc, 'Word2007');
+        // $objWriter->save('doc'.date('Y-m-d').'.docx');
+      }
+      return $this->render('inventory',['empl' => $employees]);
+    }
 
     public function actionOrders(){
 

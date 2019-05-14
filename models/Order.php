@@ -70,22 +70,27 @@ class Order extends \yii\db\ActiveRecord
 
     public function NumOrder(){
 
-      return $query = Yii::$app->db->createCommand("SELECT count(id_order) from  `ORDER`")->queryScalar();
+      return $query = Yii::$app->db->createCommand("SELECT count(id_order) from  `order`")->queryScalar();
     }
 
     public function LastId(){
 
-      return $query = Yii::$app->db->createCommand("SELECT id_order from `ORDER` ORDER BY id_order DESC LIMIT 1")->queryScalar();
+      return $query = Yii::$app->db->createCommand("SELECT id_order from `order` ORDER BY id_order DESC LIMIT 1")->queryScalar();
     }
 
     public function NewOrdersCount(){
 
-      return $query = Yii::$app->db->createCommand("SELECT count(*) from `ORDER` where status_id = 1")->queryScalar();
+      return $query = Yii::$app->db->createCommand("SELECT count(*) from `order` where status_id = 1")->queryScalar();
     }
 
     public function NewOrders(){
 
-      return $query = Yii::$app->db->createCommand("SELECT * from `ORDER` where status_id = 1")->query();
+      return $query = Yii::$app->db->createCommand("SELECT * from `order` where status_id = 1")->query();
+    }
+
+    public function CompliteOrders(){
+
+      return $query = Yii::$app->db->createCommand("SELECT * from `order` where status_id = 2")->query();
     }
 
 
